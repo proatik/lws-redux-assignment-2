@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { addBooking } from "../redux/booking/actions";
@@ -33,6 +33,7 @@ const validateValues = (values) => {
 };
 
 function BookingForm() {
+  const formRef = useRef(null);
   const dispatch = useDispatch();
   const [values, setValues] = useState(initialValues);
   const bookings = useSelector(({ booking }) => booking.bookings);
@@ -54,13 +55,21 @@ function BookingForm() {
     event.preventDefault();
 
     const isValid = validateValues(values);
-    if (isValid) dispatch(addBooking(values));
+    if (isValid) {
+      dispatch(addBooking(values));
+
+      formRef.current.reset();
+    }
   };
 
   return (
     <div className="mt-[160px] mx-4 md:mt-[160px] relative">
       <div className="bg-white rounded-md max-w-6xl w-full mx-auto">
-        <form className="first-hero lws-inputform" onSubmit={addBookingHandler}>
+        <form
+          ref={formRef}
+          onSubmit={addBookingHandler}
+          className="first-hero lws-inputform"
+        >
           {/* From */}
           <div className="des-from">
             <p>Destination From</p>
